@@ -1,0 +1,162 @@
+[200~
+JavaScript Login Form
+
+login form in javascript
+
+Now let me deploy the preview.
+
+how to create lgin form in javascript
+
+The preview is live and clean. Here's how the login form works, step by step.
+How to create a login form in JavaScript
+
+A login form has three layers working together: HTML structure, CSS styling, and JavaScript behavior. The live preview shows the finished result.
+1. Build the HTML structure
+
+Use semantic form elements so browsers and screen readers understand it:
+
+xml
+<form id="loginForm" novalidate>
+  <div class="field">
+    <label for="email">Email address</label>
+    <input type="email" id="email" name="email" required />
+  </div>
+  <div class="field">
+    <label for="password">Password</label>
+    <input type="password" id="password" name="password" minlength="6" required />
+    <button type="button" id="togglePass">Show</button>
+  </div>
+  <button type="submit">Sign in</button>
+</form>
+
+Key points: type="email" and type="password" give you native browser behavior for free. Every <input> has a matching <label>. The novalidate attribute turns off the browser's default bubbles so you can write your own validation.
+2. Validate on submit
+
+The core of a JS login form is the submit event handler. You check the inputs, show errors inline, and only "log in" if everything passes:
+
+javascript
+const form = document.getElementById('loginForm');
+const email = document.getElementById('email');
+const password = document.getElementById('password');
+const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+form.addEventListener('submit', function (e) {
+  e.preventDefault();              // stop the page reloading
+
+  const emailOk = emailRe.test(email.value.trim());
+  const passOk = password.value.length >= 6;
+
+  // show / hide error messages
+  emailField.classList.toggle('invalid', !emailOk);
+  passwordField.classList.toggle('invalid', !passOk);
+
+  if (!emailOk || !passOk) return;  // stop if invalid
+
+  // valid — simulate the login request
+  submitBtn.disabled = true;
+  setTimeout(() => {
+    // show success state
+  }, 1200);
+});
+
+e.preventDefault() is the most important line — without it the form reloads the page and your JavaScript never runs.
+3. Add a password show/hide toggle
+
+Toggle the input's type attribute between password and text:
+
+javascript
+togglePass.addEventListener('click', function () {
+  const show = password.type === 'password';
+  password.type = show ? 'text' : 'password';
+  togglePass.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+});
+
+4. Handle the loading and success states
+
+Real logins take a moment, so disable the button and show a spinner while you "wait":
+
+javascript
+submitBtn.classList.add('loading');
+submitBtn.disabled = true;
+setTimeout(() => {
+  form.classList.add('hidden');
+  document.getElementById('success').classList.add('show');
+}, 1200);
+
+5. Clear errors as the user types
+
+Don't leave red errors visible after the user starts fixing them:
+
+javascript
+email.addEventListener('input', () => {
+  if (emailField.classList.contains('invalid')) validateEmail();
+});
+
+Important note
+
+This validates on the client only — it's a UI demo. A real login system needs a backend/API that checks credentials against a database, hashes passwords, and issues session tokens. Never store or verify passwords in the browser.
+
+The attached preview is ready. Want me to keep iterating on it, publish it to a permanent pplx.app link, or open the app to share it (with an option to let viewers remix their own version)?
+Login Form
+Login Form
+
+Update login-system.pplx.app with the dashboard version
+
+The live site is updated and working — the protected /api/dashboard route returns the user's data with a valid token. The "404" on the first check was just the wrong URL path (static S3 doesn't serve /api/...); let me confirm the 401 behavior on the correct proxied route.
+
+The live site is updated and verified. Here's the summary.
+login-system.pplx.app is now live with the dashboard
+
+The protected dashboard version is deployed to your permanent URL: https://login-system.pplx.app
+What I verified on the live domain
+
+    /api/dashboard returns 401 with no token and with an invalid token (the protection works)
+
+    Registering a new account works, login issues a token, and /api/dashboard returns the authenticated user's account ID, email, member-since date, and session expiry
+
+    The SQLite database was preserved across the re-publish (the earlier test accounts are still there)
+
+What visitors can now do
+
+    Sign up or sign in on the login form
+
+    Land on the protected dashboard, which loads its content only after a successful authenticated API call
+
+    See their account info (Account ID, Member since, Session expires) and a panel confirming the protected route responded
+
+    Sign out, which invalidates the session and returns to the login form
+
+Current settings
+
+    Visibility: Public — anyone with the link can use it
+
+    You can change visibility (private, org-shared, or specific people) from the Publish dropdown's Visibility section: Visibility settings
+
+Reminder
+
+The session token lives in JavaScript memory, so refreshing the page signs you out — this is a demo limitation. A production app would use HttpOnly cookies for persistent, XSS-resistant sessions.
+
+Want me to add anything else, like a "remember me" that persists the session across refreshes?
+Login System
+Login System
+Add a remember me option that persists sessions across refreshes
+Skills
+website-building
+Artifacts
+Login System
+Login Form
+Sources
+Usage
+Subagents
+Advisor
+Stopped
+Stopped
+Advisor
+Completed
+Advisor
+Completed
+Advisor
+Completed
+
+
+
